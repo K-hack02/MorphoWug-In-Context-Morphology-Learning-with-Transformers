@@ -1,7 +1,6 @@
-"""
-Our data consists of spaces and lowercase letters. We want to tokenize the data into integers.
-We also have two custom tokens: -> and ; to indicate the analogy format.
-"""
+IS_TO_TOKEN = '#'
+AS_TOKEN = '$'
+END_TOKEN = '@'
 
 CHAR_TO_TOKEN = {
     ' ': 0,
@@ -31,11 +30,15 @@ CHAR_TO_TOKEN = {
     'x': 24,
     'y': 25,
     'z': 26,
-    '->': 27,
-    ';': 28
+    '#': 27,
+    '$': 28,
+    '@': 29,
+    '\'': 30
 }
 
 TOKEN_TO_CHAR = {v: k for k, v in CHAR_TO_TOKEN.items()}
+
+VOCAB_SIZE = len(CHAR_TO_TOKEN)
 
 def tokenize(text):
     return [CHAR_TO_TOKEN[c] for c in text]
