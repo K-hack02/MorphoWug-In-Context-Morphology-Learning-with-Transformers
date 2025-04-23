@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
 class WordPair(BaseModel):
-    A: str
-    B: str
+    word1: str
+    word2: str
 
 class WordPairs(BaseModel):
     category: str
