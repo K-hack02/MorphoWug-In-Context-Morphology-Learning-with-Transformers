@@ -12,19 +12,34 @@ load_dotenv()
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-DATA_PER_CATEGORY = 10_000
-QUERY_BATCH_SIZE = 100
+DATA_PER_CATEGORY = 5_000
+QUERY_BATCH_SIZE = 200
 NUM_BATCHES = DATA_PER_CATEGORY // QUERY_BATCH_SIZE
 
 data: Dict[str, List[str]] = {
-    "singular to plural": [],
-    "present tense to past tense": [],
-    "base case to third person singular": [],
-    "singular possessive to plural possessive": [],
-    "comparative adjective to superlative adjective": [],
-    "verb to progressive verb": [],
-    "verb to derived agentive": [],
-    "base case to diminuitive": [],
+    "singular_to_plural": set(),
+    "present_tense_to_past_tense": set(),
+    "base_case_to_third_person_singular": set(),
+    "singular_possessive_to_plural_possessive": set(),
+    "comparative_adjective_to_superlative_adjective": set(),
+    "verb_to_progressive_verb": set(),
+    "verb_to_derived_agentive": set(),
+    "base_case_to_diminuitive": set(),
+    "adjective_to_adverb": set(),
+    "verb_to_gerund": set(),
+    "noun_to_adjective": set(),
+    "positive_to_negative_prefix": set(),
+    "verb_to_noun": set(),
+    "present_tense_to_future_tense": set(),
+    "cardinal_to_ordinal": set(),
+    "adjective_to_noun": set(),
+    "base_to_reflexive_pronoun": set(),
+    "nominative_to_accusative_pronoun": set(),
+    "base_to_past_participle": set(),
+    "simple_past_to_past_perfect": set(),
+    "affirmative_to_negative": set(),
+    "masculine_to_feminine": set(),
+    "concrete_to_abstract_noun": set(),
 }
 
 def generate_word_pairs(category: str, num_pairs: int = QUERY_BATCH_SIZE) -> Dict[str, str]:
@@ -34,13 +49,10 @@ def generate_word_pairs(category: str, num_pairs: int = QUERY_BATCH_SIZE) -> Dic
         contents=f'Generate {num_pairs} word pairs for the category "{category}". \
         You should return a list of word pairs, where each element is WordPair that contains two words (word1, word2). \
         Please be creative and varied in your word choices.',
-        generation_config={
-            'temperature': 0.9,  # Higher temperature (0-1) means more random/creative outputs
-            'candidate_count': 1,
-        },
         config={
             'response_mime_type': 'application/json',
             'response_schema': list[WordPair],
+            'temperature': 2.0,  # Set to maximum value for maximum randomness
         },
     )
     return response.parsed
@@ -50,19 +62,17 @@ def populate_data(categories: List[str] = list(data.keys()), num_batches: int = 
         for i in range(num_batches):
             print(f"Generating {num_pairs} word pairs for category: {category}, batch {i+1}/{num_batches}")
             pairs = generate_word_pairs(category, num_pairs)
-            data[category].extend(pairs)
+            for pair in pairs:
+                data[category].add((pair.word1, pair.word2))
             time.sleep(1)
-
-    for category, pairs in data.items():
-        # Create filename from category, replace spaces with underscores
-        filename = os.path.join('data', f"{category.replace(' ', '_')}.csv")
+            
+        filename = os.path.join('data', f"{category}.csv")
         
-        print(f"Saving {len(pairs)} pairs to {filename}")
+        print(f"Saving {len(data[category])} pairs to {filename}")
         
         with open(filename, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(['word1', 'word2'])  # Write header
-            for pair in pairs:
-                writer.writerow([pair.word1, pair.word2])
+            for word1, word2 in data[category]:
+                writer.writerow([word1, word2])
                 
 populate_data()
