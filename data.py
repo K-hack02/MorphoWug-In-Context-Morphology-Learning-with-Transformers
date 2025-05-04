@@ -45,7 +45,5 @@ def load_data():
             val_data[category] = word_pairs[split_index:]
         else:
             val_data[category] = word_pairs
-    
-    for category in data:
-        print(len(data[category]))
+
     return data, train_data, val_data
