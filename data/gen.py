@@ -32,7 +32,12 @@ def generate_word_pairs(category: str, num_pairs: int = QUERY_BATCH_SIZE) -> Dic
     response = client.models.generate_content(
         model='gemini-2.0-flash',
         contents=f'Generate {num_pairs} word pairs for the category "{category}". \
-        You should return a list of word pairs, where each element is WordPair that contains two words (word1, word2).',
+        You should return a list of word pairs, where each element is WordPair that contains two words (word1, word2). \
+        Please be creative and varied in your word choices.',
+        generation_config={
+            'temperature': 0.9,  # Higher temperature (0-1) means more random/creative outputs
+            'candidate_count': 1,
+        },
         config={
             'response_mime_type': 'application/json',
             'response_schema': list[WordPair],

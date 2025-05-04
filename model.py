@@ -142,7 +142,7 @@ class GPTLanguageModel(nn.Module):
 
         return logits, loss
 
-    def test(self, context, target):
+    def test(self, context, target, print=False):
         idx = torch.tensor(tokenize(context)).to(DEVICE).unsqueeze(0)
         t = len(target)
         for i in range(t):
@@ -160,4 +160,7 @@ class GPTLanguageModel(nn.Module):
             idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
 
         prediction = detokenize(idx[0].tolist())[-t:]
+
+        if print:
+            print(f'Context: {context}, Prediction: {prediction}, Expected: {target}')
         return prediction == target
