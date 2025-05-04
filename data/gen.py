@@ -1,46 +1,18 @@
 from google import genai
 import os
 from dotenv import load_dotenv
-from schema import WordPairs, WordPair
-import json
+from schema import WordPair
 import time
 from typing import Dict, List
 import csv
 import os
+from hyperparameters import DATA_PER_CATEGORY, QUERY_BATCH_SIZE, NUM_BATCHES, DATA_CATEGORIES
 
 load_dotenv()
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-DATA_PER_CATEGORY = 5_000
-QUERY_BATCH_SIZE = 200
-NUM_BATCHES = DATA_PER_CATEGORY // QUERY_BATCH_SIZE
-
-data: Dict[str, List[str]] = {
-    "singular_to_plural": set(),
-    "present_tense_to_past_tense": set(),
-    "base_case_to_third_person_singular": set(),
-    "singular_possessive_to_plural_possessive": set(),
-    "comparative_adjective_to_superlative_adjective": set(),
-    "verb_to_progressive_verb": set(),
-    "verb_to_derived_agentive": set(),
-    "base_case_to_diminuitive": set(),
-    "adjective_to_adverb": set(),
-    "verb_to_gerund": set(),
-    "noun_to_adjective": set(),
-    "positive_to_negative_prefix": set(),
-    "verb_to_noun": set(),
-    "present_tense_to_future_tense": set(),
-    "cardinal_to_ordinal": set(),
-    "adjective_to_noun": set(),
-    "base_to_reflexive_pronoun": set(),
-    "nominative_to_accusative_pronoun": set(),
-    "base_to_past_participle": set(),
-    "simple_past_to_past_perfect": set(),
-    "affirmative_to_negative": set(),
-    "masculine_to_feminine": set(),
-    "concrete_to_abstract_noun": set(),
-}
+data: Dict[str, List[str]] = {category: set() for category in DATA_CATEGORIES}
 
 def generate_word_pairs(category: str, num_pairs: int = QUERY_BATCH_SIZE) -> Dict[str, str]:
     """Generate word pairs for a given category."""
