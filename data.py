@@ -9,20 +9,25 @@ def load_data():
     train_data = {category: [] for category in TRAIN_DATA_CATEGORIES}
     val_data = {category: [] for category in VAL_DATA_CATEGORIES}
     
+    # Create data directory if it doesn't exist
+    data_dir = "data"
+    os.makedirs(data_dir, exist_ok=True)
+    
     # Download data files
     csv_filepaths = [category + ".csv" for category in DATA_CATEGORIES]
     for csv_filepath in csv_filepaths:
         url = f"https://raw.githubusercontent.com/adamoosya/182Proj/main/data/{csv_filepath}"
+        output_path = os.path.join(data_dir, csv_filepath)
         try:
             # Use subprocess for downloading files
-            subprocess.run(["wget", "--no-cache", "--backups=1", url], check=True)
+            subprocess.run(["wget", "--no-cache", "--backups=1", "-O", output_path, url], check=True)
         except (subprocess.SubprocessError, FileNotFoundError):
             print(f"Error downloading {url}. Make sure wget is installed or modify the code to use another download method.")
             continue
 
     # Process the downloaded CSV files
     for category in DATA_CATEGORIES:
-        csv_filepath = category + ".csv"
+        csv_filepath = os.path.join(data_dir, category + ".csv")
         if not os.path.exists(csv_filepath):
             print(f"Warning: {csv_filepath} not found. Skipping.")
             continue
