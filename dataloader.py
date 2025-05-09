@@ -34,10 +34,8 @@ def get_context_example(dataset, category=None):
     n = len(data)
     word1, word2 = data[np.random.randint(n)]
     word3, word4 = data[np.random.randint(n)]
-    window = np.random.randint(len(word4)+1)
-    word4 += END_TOKEN
-    x = word1 + IS_TO_TOKEN + word2 + AS_TOKEN + word3 + IS_TO_TOKEN + word4[:window]
-    y = word1[1:] + IS_TO_TOKEN + word2 + AS_TOKEN + word3 + IS_TO_TOKEN + word4[:window + 1]
+    x = word1 + IS_TO_TOKEN + word2 + AS_TOKEN + word3 + IS_TO_TOKEN + word4
+    y = word1[1:] + IS_TO_TOKEN + word2 + AS_TOKEN + word3 + IS_TO_TOKEN + word4 + END_TOKEN
     x = torch.tensor(tokenize(x))
     y = torch.tensor(tokenize(y))
     return x, y
