@@ -71,7 +71,7 @@ And several other transformations that demonstrate the model's ability to learn 
 
 ## Running the Project in Google Colab
 
-You can run this project directly in Google Colab: [Open in Colab](https://colab.research.google.com/github/adamoosya/182Proj/blob/main/run.ipynb)
+You can run this project directly in Google Colab: [Open in Colab](https://colab.research.google.com/github/K-hack02/MorphoWug-In-Context-Morphology-Learning-with-Transformers/blob/main/run.ipynb)
 
 ### Running from Scratch
 
